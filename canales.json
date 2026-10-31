@@ -481,198 +481,32 @@
       "down": [],
       "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
       "reacciones": true
+    },
+    "-1002627538961:592": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002873517081:31": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002015490986:2487": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
     }
   },
   "historial_publicaciones": [
     {
-      "fecha": "2026-10-31T03:14:21.738Z",
-      "app": "E m Ultra súper consola de DJ",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:19.561Z",
-      "app": "descriptor en tiempo real by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:16.481Z",
-      "app": "E m Gestor de cuentas y contraseñas",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:14.668Z",
-      "app": "E m Gestor de enlaces",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:12.006Z",
-      "app": "E m Controles de música",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:09.792Z",
-      "app": "Convertidor de textos Pro by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:05.976Z",
-      "app": "E m Descriptor del enfoque actual y pantalla completa avanzado",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:04.519Z",
-      "app": "Gestor de APIs de Google Gemini by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:02.148Z",
-      "app": "Dictado de Gemini personalizado by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:14:00.242Z",
-      "app": "E m Dictado avanzado con Gemini",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:57.562Z",
-      "app": "E m Monitor de batería pro",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:55.916Z",
-      "app": "E m Descriptor de videos",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:52.827Z",
-      "app": "importador de recursos by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:47.570Z",
-      "app": "E m Convertidor de texto a voz",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:44.375Z",
-      "app": "Estado del clima by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:41.778Z",
-      "app": "Gestor de APIs de Groq by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:39.748Z",
-      "app": "Generador de exposiciones by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:04.208Z",
-      "app": "Mi ecualizador Pro @Jieshuo forever",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:01.401Z",
-      "app": "Ejecutador y limpiador de códigos @Jieshuo forever",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:13:00.526Z",
-      "app": "Reproductor de música by accesorios del Jieshuo",
-      "version": "1.5.3.6",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:12:58.257Z",
-      "app": "Juego carrera de aviones by accesorios del Jieshuo",
-      "version": "1.5.3.3",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:12:53.988Z",
-      "app": "E m Ejecutador de Códigos pro",
-      "version": "1.0",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:12:24.056Z",
-      "app": "E m asistente inteligente Plus 2.0",
-      "version": "1.5.3.7",
-      "es_actualizacion": false,
-      "enviados": 3,
-      "total_canales": 4
-    },
-    {
-      "fecha": "2026-10-31T03:12:16.506Z",
-      "app": "E m asistente de Mili Music",
-      "version": "1.5.3.5",
-      "es_actualizacion": false,
+      "fecha": "2026-10-31T12:29:41.368Z",
+      "app": "mili music",
+      "version": "2.8.4",
+      "es_actualizacion": true,
       "enviados": 3,
       "total_canales": 4
     }
