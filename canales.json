@@ -193,9 +193,35 @@
       "down": [],
       "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
       "reacciones": true
+    },
+    "-1002627538961:576": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002873517081:15": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002015490986:2471": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
     }
   },
   "historial_publicaciones": [
+    {
+      "fecha": "2026-10-31T03:13:41.778Z",
+      "app": "Gestor de APIs de Groq by accesorios del Jieshuo",
+      "version": "1.5.3.3",
+      "es_actualizacion": false,
+      "enviados": 3,
+      "total_canales": 4
+    },
     {
       "fecha": "2026-10-31T03:13:39.748Z",
       "app": "Generador de exposiciones by accesorios del Jieshuo",
