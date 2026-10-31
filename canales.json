@@ -79,6 +79,26 @@
       "reacciones": true
     },
     "-1002015490986:2464": {
+      "up": [
+        "7284441581"
+      ],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002627538961:570": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002873517081:9": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002015490986:2465": {
       "up": [],
       "down": [],
       "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
@@ -86,6 +106,14 @@
     }
   },
   "historial_publicaciones": [
+    {
+      "fecha": "2026-10-31T03:12:53.988Z",
+      "app": "E m Ejecutador de Códigos pro",
+      "version": "1.0",
+      "es_actualizacion": false,
+      "enviados": 3,
+      "total_canales": 4
+    },
     {
       "fecha": "2026-10-31T03:12:24.056Z",
       "app": "E m asistente inteligente Plus 2.0",
