@@ -229,9 +229,35 @@
       "down": [],
       "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
       "reacciones": true
+    },
+    "-1002627538961:578": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002873517081:17": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002015490986:2473": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
     }
   },
   "historial_publicaciones": [
+    {
+      "fecha": "2026-10-31T03:13:47.570Z",
+      "app": "E m Convertidor de texto a voz",
+      "version": "1.5.3.3",
+      "es_actualizacion": false,
+      "enviados": 3,
+      "total_canales": 4
+    },
     {
       "fecha": "2026-10-31T03:13:44.375Z",
       "app": "Estado del clima by accesorios del Jieshuo",
