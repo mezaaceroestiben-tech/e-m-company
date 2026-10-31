@@ -47,6 +47,34 @@
       "agregado": "2026-10-31T02:21:26.994Z"
     }
   ],
-  "votos": {},
-  "historial_publicaciones": []
+  "votos": {
+    "-1002627538961:568": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002873517081:7": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    },
+    "-1002015490986:2463": {
+      "up": [],
+      "down": [],
+      "paypal": "https://www.paypal.com/donate/?business=softwarytec24%40gmail.com&no_recurring=1&currency_code=USD&item_name=EM+Premium",
+      "reacciones": true
+    }
+  },
+  "historial_publicaciones": [
+    {
+      "fecha": "2026-10-31T03:12:16.506Z",
+      "app": "E m asistente de Mili Music",
+      "version": "1.5.3.5",
+      "es_actualizacion": false,
+      "enviados": 3,
+      "total_canales": 4
+    }
+  ]
 }
