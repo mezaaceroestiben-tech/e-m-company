@@ -68,6 +68,7 @@ let datos = datosPorDefecto();
 let estadosChat = {};
 let infoBot = { username: "", first_name: "E m company" };
 let sincronizandoGH = false;
+let ultimoSync = { ok: null, detalle: "todavía no se intentó", cuando: 0 };
 let pendienteGH = false;
 
 function cargarLocal() {
@@ -96,7 +97,10 @@ function guardarLocal() {
 }
 
 async function sincronizarDesdeGitHub() {
-  if (!GH_TOKEN || !GH_OWNER || !GH_REPO) return;
+  if (!GH_TOKEN || !GH_OWNER || !GH_REPO) {
+    ultimoSync = { ok: false, detalle: "faltan las variables GITHUB_TOKEN, GITHUB_OWNER o GITHUB_REPO en Render", cuando: Date.now() };
+    return;
+  }
   try {
     const url = "https://api.github.com/repos/" + GH_OWNER + "/" + GH_REPO + "/contents/canales.json?ref=" + encodeURIComponent(GH_BRANCH);
     const r = await fetch(url, {
@@ -106,7 +110,11 @@ async function sincronizarDesdeGitHub() {
         "User-Agent": "EmMasterManagerBot"
       }
     });
+    if (r.status !== 200) {
+      ultimoSync = { ok: false, detalle: "GitHub respondió " + r.status + (r.status === 401 ? " (el GITHUB_TOKEN del bot venció o fue borrado: cámbialo en Render > Environment)" : (r.status === 403 || r.status === 404) ? " (el GITHUB_TOKEN del bot no tiene acceso al repositorio " + GH_OWNER + "/" + GH_REPO + ", o ese repositorio ya no existe)" : ""), cuando: Date.now() };
+    }
     if (r.status === 200) {
+      ultimoSync = { ok: true, detalle: "canales.json leído de GitHub", cuando: Date.now() };
       const js = await r.json();
       if (js && js.content) {
         const texto = Buffer.from(js.content.replace(/\s+/g, ""), "base64").toString("utf8");
@@ -132,6 +140,7 @@ async function sincronizarDesdeGitHub() {
       }
     }
   } catch (e) {
+    ultimoSync = { ok: false, detalle: "error de red hablando con GitHub: " + e.message, cuando: Date.now() };
     console.log("Aviso sincronizando desde GitHub:", e.message);
   }
 }
@@ -490,7 +499,7 @@ async function obtenerApksParaPublicar(info) {
 async function distribuirACanales(info) {
   await sincronizarDesdeGitHub();
   if (!datos.canales || datos.canales.length === 0) {
-    return { ok: false, error: "No hay canales registrados en canales.json. Abre el bot en Telegram y toca '➕ Añadir nuevo canal'." };
+    return { ok: false, error: "No hay canales registrados en canales.json." + (ultimoSync.ok === false ? " Además el bot no pudo leer sus canales guardados en GitHub: " + ultimoSync.detalle + "." : " Abre el bot en Telegram y toca '➕ Añadir nuevo canal'.") };
   }
   let apks = [];
   try {
@@ -1077,6 +1086,7 @@ http.createServer(async (req, res) => {
       ok: true,
       bot: infoBot,
       total_canales: datos.canales.length,
+      sincronizacion_github: ultimoSync,
       paypal_url: datos.paypal_url,
       opciones_publicacion: datos.opciones_publicacion
     }));
