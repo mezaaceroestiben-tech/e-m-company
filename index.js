@@ -229,10 +229,11 @@ async function enviarDocumentoMultipart(chatId, nombreArchivo, bufferArchivo, ca
     campoTexto("reply_markup", JSON.stringify(replyMarkup));
   }
   const nombreLimpio = String(nombreArchivo || "aplicacion.apk").replace(/["\r\n]/g, "_");
+  const tipoMime = /\.apk$/i.test(nombreLimpio) ? "application/vnd.android.package-archive" : "application/octet-stream";
   partes.push(Buffer.from(
     "--" + boundary + "\r\n" +
     'Content-Disposition: form-data; name="document"; filename="' + nombreLimpio + '"\r\n' +
-    "Content-Type: application/vnd.android.package-archive\r\n\r\n",
+    "Content-Type: " + tipoMime + "\r\n\r\n",
     "utf8"
   ));
   partes.push(bufferArchivo);
