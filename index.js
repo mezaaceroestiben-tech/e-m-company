@@ -496,11 +496,190 @@ async function obtenerApksParaPublicar(info) {
   return lista;
 }
 
+function recortarTexto(t, max) {
+  t = String(t || "").trim();
+  return t.length > max ? t.slice(0, max - 1) + "…" : t;
+}
+
+// Aviso de un elemento de pago (Premium): solo texto, sin archivo ni enlace de descarga.
+function armarTextoPremium(info) {
+  const esAct = Boolean(info.es_actualizacion);
+  const nombre = escaparHtml(info.app_name || "Elemento");
+  const ver = escaparHtml(info.version_name || "");
+  const tipo = escaparHtml(info.tipo_elemento || "").trim();
+  const tienda = escaparHtml(info.tienda_autor || "").trim();
+  const subido = escaparHtml(info.subido_por || "").trim();
+  const desc = escaparHtml(recortarTexto(info.descripcion, 1500));
+  const nov = escaparHtml(recortarTexto(info.novedades, 1500));
+  const desde = escaparHtml(info.distribuido_desde || "").trim() || "la tienda";
+  const l = [];
+  l.push(esAct ? "⭐ <b>Actualización Premium en la tienda</b>" : "⭐ <b>Nuevo elemento Premium en la tienda</b>");
+  l.push("");
+  l.push("📦 <b>" + nombre + "</b>" + (esAct && ver ? " — <b>v" + ver + "</b>" : ""));
+  if (tipo) l.push("🏷️ <b>Tipo:</b> " + tipo);
+  if (tienda) l.push("🏬 <b>Tienda:</b> " + tienda);
+  if (subido) l.push("👤 <b>Subido por:</b> " + subido);
+  if (esAct) {
+    if (nov) { l.push(""); l.push("🆕 <b>Novedades:</b>"); l.push(nov); }
+  } else if (desc) {
+    l.push(""); l.push("📝 <b>Descripción:</b>"); l.push(desc);
+  }
+  l.push("");
+  l.push("✨ <b>Descúbrelo en " + desde + "</b>");
+  return l.join("\n");
+}
+
+// ---- Códigos de canje (promociones): el código vive en el puente; el bot solo lo muestra ----
+const PUENTE_URL = (process.env.PUENTE_URL || "").trim().replace(/\/+$/, "");
+const PUENTE_CLAVE = (process.env.PUENTE_CLAVE || "").trim();
+async function puenteFetch(metodo, ruta, cuerpo) {
+  if (!PUENTE_URL) return { status: 0, json: { message: "El bot no tiene PUENTE_URL" } };
+  const r = await fetch(PUENTE_URL + ruta, {
+    method: metodo,
+    headers: { "Content-Type": "application/json", "X-Bot-Clave": PUENTE_CLAVE },
+    body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+    signal: AbortSignal.timeout(20000)
+  });
+  let j = null;
+  try { j = await r.json(); } catch (_) {}
+  return { status: r.status, json: j || {} };
+}
+function textoBotonPromo(d) {
+  const n = Number(d && d.disponibles) || 0;
+  if (!d || d.agotado || n <= 0) return "🎟️ Cupos agotados";
+  return "🎟️ Ver código de canje — faltan " + n + (n === 1 ? " cupo" : " cupos");
+}
+function tecladoPromo(promoId, d, donar) {
+  const filas = [[{ text: textoBotonPromo(d), callback_data: "promo:" + promoId }]];
+  if (donar && donar.url) filas.push([{ text: donar.text, url: donar.url }]);
+  return { inline_keyboard: filas };
+}
+async function refrescarBotonesPromo(promoId, d) {
+  const reg = datos.promo_mensajes && datos.promo_mensajes[promoId];
+  if (!reg) return;
+  for (const m of reg.msgs || []) {
+    try {
+      await llamar("editMessageReplyMarkup", { chat_id: m.c, message_id: m.m, reply_markup: tecladoPromo(promoId, d, reg.donar) });
+    } catch (_) {}
+    await new Promise((ok) => setTimeout(ok, 120));
+  }
+}
+const cachePromoVer = {};
+async function manejarPromoCallback(cb, promoId) {
+  if (!PUENTE_URL || !PUENTE_CLAVE) {
+    await llamar("answerCallbackQuery", { callback_query_id: cb.id, text: "Los códigos de canje no están disponibles por ahora.", show_alert: true });
+    return;
+  }
+  let r = cachePromoVer[promoId];
+  if (!r || Date.now() - r.t > 2000) {
+    try { r = { t: Date.now(), v: await puenteFetch("POST", "/puente/promos/ver", { id: promoId }) }; } catch (e) { r = { t: Date.now(), v: { status: 0, json: {} } }; }
+    cachePromoVer[promoId] = r;
+  }
+  const v = r.v;
+  if (v.status === 404) {
+    await llamar("answerCallbackQuery", { callback_query_id: cb.id, text: "Este código ya no está disponible.", show_alert: true });
+    return;
+  }
+  if (v.status !== 200) {
+    await llamar("answerCallbackQuery", { callback_query_id: cb.id, text: "No se pudo consultar el código ahora. Intenta de nuevo en un momento.", show_alert: true });
+    return;
+  }
+  const d = v.json;
+  if (d.agotado) {
+    await llamar("answerCallbackQuery", { callback_query_id: cb.id, text: "⛔ Los cupos de este código se agotaron.", show_alert: true });
+  } else {
+    const n = Number(d.disponibles) || 0;
+    await llamar("answerCallbackQuery", {
+      callback_query_id: cb.id,
+      text: "🎟️ Código de canje:\n\n" + d.codigo + "\n\nQuedan " + n + (n === 1 ? " cupo" : " cupos") + ". Escríbelo en la tienda, en Códigos de canje.",
+      show_alert: true
+    });
+  }
+  refrescarBotonesPromo(promoId, d);
+}
+
+async function distribuirSoloTexto(info) {
+  const texto = armarTextoPremium(info);
+  const resultados = [];
+  let enviados = 0;
+  // Único botón del aviso Premium: donar (sin descarga ni reacciones).
+  let tecladoPremium = null;
+  const opPrem = normalizarOpciones(info.opciones_publicacion || datos.opciones_publicacion);
+  if (opPrem.boton_paypal !== false) {
+    const urlDonar = normalizarPaypal(info.paypal_url || datos.paypal_url);
+    if (urlDonar && /^https?:\/\//i.test(urlDonar)) {
+      tecladoPremium = { inline_keyboard: [[{ text: "💝 " + (info.texto_boton_donar || datos.texto_boton_donar || "Donar vía PayPal"), url: urlDonar }]] };
+    }
+  }
+  // Botón de código de canje (si el elemento tiene promoción y el bot conoce el puente).
+  let promoEstado = null;
+  const promoId = String(info.promo_id || "").slice(0, 40);
+  const donarProm = tecladoPremium ? { text: tecladoPremium.inline_keyboard[0][0].text, url: tecladoPremium.inline_keyboard[0][0].url } : null;
+  if (promoId && PUENTE_URL) {
+    try {
+      const e = await puenteFetch("GET", "/puente/promos/estado?id=" + encodeURIComponent(promoId));
+      if (e.status === 200) promoEstado = { disponibles: e.json.disponibles, agotado: !e.json.activo || e.json.disponibles <= 0 };
+    } catch (_) {}
+  }
+  for (const canal of datos.canales) {
+    try {
+      const payloadPrem = { chat_id: canal.id, text: texto, parse_mode: "HTML", disable_web_page_preview: true };
+      if (promoEstado) payloadPrem.reply_markup = tecladoPromo(promoId, promoEstado, donarProm);
+      else if (tecladoPremium) payloadPrem.reply_markup = tecladoPremium;
+      const r = await llamar("sendMessage", payloadPrem);
+      if (r && r.ok && r.result) {
+        enviados++;
+        if (promoEstado) {
+          datos.promo_mensajes = datos.promo_mensajes || {};
+          const reg = datos.promo_mensajes[promoId] = datos.promo_mensajes[promoId] || { donar: donarProm, msgs: [], t: Date.now() };
+          reg.msgs.push({ c: canal.id, m: r.result.message_id });
+          if (reg.msgs.length > 60) reg.msgs.shift();
+          const claves = Object.keys(datos.promo_mensajes);
+          if (claves.length > 40) {
+            claves.sort((a, b) => (datos.promo_mensajes[a].t || 0) - (datos.promo_mensajes[b].t || 0));
+            delete datos.promo_mensajes[claves[0]];
+          }
+        }
+        resultados.push({ canal: canal.titulo, id: canal.id, ok: true, message_id: r.result.message_id });
+      } else {
+        resultados.push({ canal: canal.titulo, id: canal.id, ok: false, error: (r && r.description) || "Error al enviar" });
+      }
+    } catch (e) {
+      resultados.push({ canal: canal.titulo, id: canal.id, ok: false, error: e.message });
+    }
+  }
+  datos.historial_publicaciones = datos.historial_publicaciones || [];
+  datos.historial_publicaciones.unshift({
+    fecha: new Date().toISOString(),
+    app: info.app_name || "Elemento",
+    version: info.version_name || "",
+    es_actualizacion: Boolean(info.es_actualizacion),
+    premium: true,
+    enviados,
+    total_canales: datos.canales.length
+  });
+  if (datos.historial_publicaciones.length > 30) datos.historial_publicaciones.length = 30;
+  guardarTodo();
+  if (datos.propietario_id) {
+    try {
+      await llamar("sendMessage", {
+        chat_id: datos.propietario_id,
+        text: "✅ <b>Aviso Premium publicado</b> (solo texto)\n\n📦 " + escaparHtml(info.app_name || "Elemento") +
+          "\n📢 <b>Canales alcanzados:</b> " + enviados + " de " + datos.canales.length,
+        parse_mode: "HTML",
+        reply_markup: tecladoPrincipal()
+      });
+    } catch (_) {}
+  }
+  return { ok: enviados > 0, enviados, total: datos.canales.length, resultados };
+}
+
 async function distribuirACanales(info) {
   await sincronizarDesdeGitHub();
   if (!datos.canales || datos.canales.length === 0) {
     return { ok: false, error: "No hay canales registrados en canales.json." + (ultimoSync.ok === false ? " Además el bot no pudo leer sus canales guardados en GitHub: " + ultimoSync.detalle + "." : " Abre el bot en Telegram y toca '➕ Añadir nuevo canal'.") };
   }
+  if (info.solo_texto) return await distribuirSoloTexto(info);
   let apks = [];
   try {
     apks = await obtenerApksParaPublicar(info);
@@ -720,6 +899,10 @@ async function manejarMiembroCanal(mcm) {
 
 async function manejarCallback(cb) {
   const data = String(cb.data || "");
+  if (data.indexOf("promo:") === 0) {
+    await manejarPromoCallback(cb, data.slice(6));
+    return;
+  }
   if (data === "v_up" || data === "v_down") {
     if (!cb.message || !cb.message.chat) return;
     const clave = String(cb.message.chat.id) + ":" + String(cb.message.message_id);
@@ -1123,6 +1306,25 @@ http.createServer(async (req, res) => {
       res.end(JSON.stringify({ ok: true, canales: datos.canales, paypal_url: datos.paypal_url, opciones_publicacion: datos.opciones_publicacion }));
     } catch (e) {
       res.writeHead(400, Object.assign({ "Content-Type": "application/json; charset=utf-8" }, cors));
+      res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
+    return;
+  }
+  if (u.pathname === "/api/promo/actualizar" && req.method === "POST") {
+    try {
+      const body = await leerCuerpoJson(req);
+      if (!autorizado(req, body)) {
+        res.writeHead(401, Object.assign({ "Content-Type": "application/json; charset=utf-8" }, cors));
+        res.end(JSON.stringify({ ok: false, error: "No autorizado" }));
+        return;
+      }
+      const n = Number(body.disponibles) || 0;
+      const d = { disponibles: n, agotado: body.activo === false || n <= 0 };
+      refrescarBotonesPromo(String(body.id || ""), d);
+      res.writeHead(200, Object.assign({ "Content-Type": "application/json; charset=utf-8" }, cors));
+      res.end(JSON.stringify({ ok: true }));
+    } catch (e) {
+      res.writeHead(500, Object.assign({ "Content-Type": "application/json; charset=utf-8" }, cors));
       res.end(JSON.stringify({ ok: false, error: e.message }));
     }
     return;
